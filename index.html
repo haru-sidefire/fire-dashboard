@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CONTENT DASHBOARD - @haru_sideFIRE</title>
+<style>
+/* ============================
+   CSS — レイアウト・テーマ
+   ============================ */
+:root {
+  --bg: #1a1a2e;
+  --card: #16213e;
+  --card-hover: #1a2745;
+  --accent: #e94560;
+  --accent2: #0f3460;
+  --text: #eee;
+  --text-sub: #aab;
+  --green: #4caf50;
+  --yellow: #ffc107;
+  --blue: #4a90d9;
+  --orange: #ff9800;
+  --border: #2a2a4a;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+.header {
+  background: linear-gradient(135deg, var(--accent2), #0a1628);
+  padding: 20px 24px;
+  border-bottom: 2px solid var(--accent);
+}
+.header h1 { font-size: 22px; font-weight: 700; }
+.header .sub { color: var(--accent); font-size: 15px; margin-top: 2px; }
+.header .update-info { color: var(--text-sub); font-size: 13px; margin-top: 4px; }
+
+/* タブ */
+.tabs {
+  display: flex;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+.tab {
+  padding: 14px 24px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-sub);
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+  transition: all .2s;
+}
+.tab:hover { color: var(--text); background: rgba(255,255,255,.03); }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* パネル */
+.panel { display: none; padding: 24px; }
+.panel.active { display: block; }
+
+/* カード共通 */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  transition: background .2s;
+}
+.card:hover { background: var(--card-hover); }
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.card-title { font-weight: 700; font-size: 16px; }
+
+/* バッジ */
+.badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.badge-published { background: var(--green); color: #fff; }
+.badge-draft { background: var(--yellow); color: #333; }
+.badge-planned { background: var(--blue); color: #fff; }
+.badge-idea { background: var(--orange); color: #fff; }
+.badge-posted { background: var(--green); color: #fff; }
+.badge-scheduled { background: var(--blue); color: #fff; }
+
+/* タグ */
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.tag {
+  background: rgba(255,255,255,.08);
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--text-sub);
+}
+
+/* カレンダー */
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-top: 12px;
+}
+.cal-header { font-size: 13px; text-align: center; color: var(--text-sub); font-weight: 600; padding: 6px 0; }
+.cal-day {
+  min-height: 68px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 7px;
+  font-size: 13px;
+}
+.cal-day.today { border-color: var(--accent); background: rgba(233,69,96,.1); }
+.cal-day .day-num { font-weight: 700; margin-bottom: 2px; }
+.cal-day .event {
+  font-size: 12px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cal-day .event.note-ev { background: rgba(74,144,217,.3); color: #8bb8ea; }
+.cal-day .event.x-ev { background: rgba(233,69,96,.3); color: #f0a0b0; }
+.cal-empty { min-height: 68px; }
+
+/* プロフィール */
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+}
+.stat-label { font-size: 13px; color: var(--text-sub); }
+.stat-value { font-size: 20px; font-weight: 700; }
+
+/* note本文プレビュー */
+.article-body { font-size: 15px; color: var(--text-sub); margin-top: 6px; line-height: 1.7; }
+.copy-btn {
+  background: var(--accent2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 8px;
+  transition: background .2s;
+}
+.copy-btn:hover { background: var(--accent); }
+.article-link-btn {
+  display: inline-block;
+  background: var(--accent2);
+  color: var(--text);
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  border: 1px solid var(--border);
+  transition: background .2s;
+}
+.article-link-btn:hover { background: var(--accent); }
+.toggle-btn {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  margin-top: 8px;
+  transition: all .2s;
+}
+.toggle-btn:hover { background: var(--accent2); }
+.toggle-btn.posted { background: rgba(76,175,80,.15); border-color: #4caf50; color: #a5d6a7; font-weight: 700; }
+.toggle-btn.posted:hover { background: rgba(76,175,80,.25); }
+.cal-day .event.x-ev.posted { opacity: .4; text-decoration: line-through; }
+
+/* 「コピーしてXを開く」メインボタン */
+.copy-go-btn {
+  background: #1da1f2;
+  color: #fff;
+  border: 1px solid #1da1f2;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 8px;
+  transition: all .2s;
+}
+.copy-go-btn:hover { background: #1a91da; }
+
+/* 「コピーのみ」小ボタン */
+.copy-btn-small {
+  background: transparent;
+  color: var(--text-sub);
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-top: 8px;
+  transition: all .2s;
+}
+.copy-btn-small:hover { background: var(--accent2); color: var(--text); }
+
+/* リセットボタン */
+.reset-btn {
+  background: transparent;
+  color: var(--text-sub);
+  border: 1px solid var(--border);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all .2s;
+}
+.reset-btn:hover { background: var(--accent2); color: var(--text); }
+
+/* 手順ガイド */
+.workflow-guide {
+  background: rgba(29,161,242,.08);
+  border: 1px solid rgba(29,161,242,.3);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+.workflow-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #8ec4f2;
+  margin-bottom: 12px;
+}
+.workflow-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.wf-step {
+  font-size: 13px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.wf-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #1da1f2;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.workflow-note {
+  font-size: 11px;
+  color: var(--text-sub);
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+}
+
+/* セクションヘッダー */
+.section-title {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* 月ナビ */
+.cal-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+.cal-nav button {
+  background: var(--accent2);
+  color: var(--text);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+}
+.cal-nav button:hover { background: var(--accent); }
+.cal-nav .cal-month-label { font-size: 18px; font-weight: 700; }
+
+@media (max-width: 600px) {
+  .panel { padding: 12px; }
+  .cal-day { min-height: 44px; padding: 2px 3px; }
+  .cal-day .event { font-size: 9px; }
+}
+</style>
+</head>
+<body>
+
+<script>
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  📝 DATA SECTION — ここだけ編集すれば全体に反映されます      ║
+// ╠══════════════════════════════════════════════════════════════╣
+// ║  status: "published" | "draft" | "planned" | "idea"         ║
+// ║  xStatus: "posted" | "scheduled"                            ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+const DASHBOARD_DATA = {
+
+  // --- 最終更新日 ---
+  lastUpdated: "2026-04-10",
+
+  // --- プロフィール ---
+  profile: {
+    name: "はるパパ",
+    handle: "@haru_sideFIRE",
+    noteId: "lucid_zinnia7777",
+    age: 50,
+    location: "名古屋",
+    status: "サイドFIRE 2ヶ月目（2026年2月末退職）",
+    totalAssets: "約6,700万円",
+    monthlyDividend: "月約7万円（年70万弱）",
+    monthlyExpense: "月30万円超",
+    partIncome: "月約12万円",
+    wifeIncome: "月約7万円",
+    gap: "約▲5万円（現金貯金から補填）",
+  },
+
+  // --- note記事一覧 ---
+  articles: [
+    {
+      id: 1,
+      title: "【自己紹介】50歳パパがサイドFIREを目指すことにした話",
+      date: "2026-03-26",
+      status: "published",
+      tags: ["#サイドFIRE", "#自己紹介", "#50歳FIRE", "#セミリタイア"],
+      summary: "退職の経緯と決意表明。サイドFIREを目指す理由。",
+      noteUrl: "https://note.com/lucid_zinnia7777/n/n13f0b8617eb6",
+    },
+    {
+      id: 2,
+      title: "50歳で20年以上勤めた会社を辞めた理由【後悔より解放感】",
+      date: "2026-03-29",
+      status: "published",
+      tags: ["#早期退職", "#50歳FIRE", "#後悔", "#解放感"],
+      summary: "20年以上勤めた会社を辞めた決断と、その後の心境。",
+      noteUrl: "https://note.com/lucid_zinnia7777/n/n93c028d25abe",
+    },
+    {
+      id: 3,
+      title: "退職までの2年間、こっそりやっていた事【お金の準備全部話す】",
+      date: "2026-03-31",
+      status: "published",
+      tags: ["#退職準備", "#お金の準備", "#FIRE準備", "#資産形成"],
+      summary: "退職前2年間で行った資金準備の全貌を公開。",
+      noteUrl: "https://note.com/lucid_zinnia7777/n/n5483b06d86aa",
+      amazonEmbed: "ほったらかし投資術（山崎元）",
+    },
+    {
+      id: 4,
+      title: "退職後1ヶ月目の資産を公開します【2026年3月末】",
+      date: "2026-04-01",
+      status: "published",
+      tags: ["#資産公開", "#サイドFIRE", "#新NISA", "#配当金生活"],
+      summary: "総資産約6,700万円の内訳公開。楽天証券・楽天銀行の詳細。",
+      noteUrl: "https://note.com/lucid_zinnia7777/n/nc6806f033909",
+      amazonEmbed: "ほったらかし投資術（山崎元）",
+    },
+    {
+      id: 5,
+      title: "退職後の収入源、正直に話します【50歳サイドFIRE2ヶ月目】",
+      date: "2026-04-05",
+      status: "published",
+      tags: ["#サイドFIRE", "#50歳FIRE", "#配当金生活", "#新NISA", "#早期退職", "#セミリタイア", "#資産運用"],
+      summary: "配当金・パート・妻パート・副業の収支リアル公開。月▲5万の実態。",
+      noteUrl: "https://note.com/lucid_zinnia7777/n/ncb34ef12af2f",
+    },
+    {
+      id: 6,
+      title: "iDeCo出口戦略、知らないと損する話【50歳サイドFIRE2ヶ月目】",
+      date: "2026-04-09",
+      status: "published",
+      tags: ["#iDeCo", "#出口戦略", "#退職金控除", "#50歳FIRE"],
+      summary: "退職金控除の仕組み・10年ルール・一時金vs年金の比較。",
+      noteUrl: "https://note.com/lucid_zinnia7777/n/ncbb315d50615",
+      amazonEmbed: "「定年後」のお金の不安をなくす（大江英樹）",
+    },
+    {
+      id: 7,
+      title: "退職後の健康保険、どう選ぶ？任意継続・国保・扶養を5人家族でシミュレーション",
+      date: "2026-04-13",
+      status: "draft",
+      tags: ["#健康保険", "#任意継続", "#国保", "#退職後"],
+      summary: "任意継続 vs 国保 vs 扶養の比較。パート＋社会保険に方向転換した判断。",
+      noteUrl: "https://editor.note.com/notes/n0828743c0406/edit/",
+    },
+    {
+      id: 8,
+      title: "NISA貧乏は本当に正解か？50歳サイドFIREが悔やむ、「思い出の配当」という視点",
+      date: "2026-04-16",
+      status: "draft",
+      tags: ["#サイドFIRE", "#FIRE", "#50代", "#新NISA", "#NISA貧乏", "#資産運用", "#思い出の配当", "#DIEWITHZERO"],
+      summary: "オピニオン記事。NISA貧乏は条件付きで正しい。でも「金融配当」「自己投資配当」「思い出配当」の3つの視点で公式を書き換える提案。",
+      noteUrl: "https://note.com/lucid_zinnia7777/n/nec18fb6b426e",
+    },
+    {
+      id: 9,
+      title: "こどもNISA？ジュニアNISA終了後の選択肢【娘7歳】",
+      date: "",
+      status: "idea",
+      tags: ["#こどもNISA", "#ジュニアNISA", "#教育資金"],
+      summary: "娘7歳のジュニアNISA済。今後の教育資金戦略。",
+      noteUrl: "",
+    },
+    {
+      id: 10,
+      title: "妻のNISA活用と社会保険加入メリット",
+      date: "",
+      status: "idea",
+      tags: ["#妻NISA", "#社会保険", "#パート"],
+      summary: "妻46歳パート。社会保険加入のメリットとNISA活用検討。",
+      noteUrl: "",
+    },
+    {
+      id: 11,
+      title: "両学長も勧めてるのに、なぜ今になってSBIを開設したのか【楽天メイン50歳の正直な話】",
+      date: "",
+      status: "draft",
+      tags: ["#サイドFIRE", "#FIRE", "#50代", "#資産運用", "#SBI証券", "#住信SBIネット銀行", "#目的別口座", "#楽天経済圏", "#お金の管理"],
+      summary: "楽天経済圏メインだった50歳が退職後にSBIを開設した理由。6つの目的別口座で「見える化」した話。SBIアフィリエイトリンク待ち。",
+      noteUrl: "https://note.com/lucid_zinnia7777/n/na4623c37353a",
+    },
+  ],
+
+  // --- X投稿一覧 ---
+  xPosts: [
+    {
+      id: 1,
+      date: "2026-04-06",
+      status: "posted",
+      text: "【note更新📝】\n退職後の収入源、正直に全部話します\n配当月7万、パート月12万、妻パート月7万…\nそれでも毎月▲5万の赤字。\nリアルな数字を全部公開しました👇\n#FIRE #50代 #早期退職 #新NISA",
+      linkedArticle: 5,
+    },
+    {
+      id: 2,
+      date: "2026-04-07",
+      status: "posted",
+      text: "サイドFIRE2ヶ月目。\n毎月▲5万の赤字、怖くないの？と聞かれる。\n正直、計算上は問題ない。\nでも「心理的な不安」はまた別の話。\nこの感覚、経験者にしかわからない。\n#FIRE #サイドFIRE #50代 #早期退職",
+      linkedArticle: null,
+    },
+    {
+      id: 3,
+      date: "2026-04-09",
+      status: "posted",
+      text: "【note更新📝】\niDeCo出口戦略、50歳の私はこう考える\n・退職金控除の10年ルールとは？\n・一時金vs年金、どっちが得？\n・私の結論はこれ👇\n#iDeCo #出口戦略 #FIRE #50代",
+      linkedArticle: 6,
+    },
+    {
+      id: 4,
+      date: "2026-04-10",
+      status: "scheduled",
+      text: "退職して2ヶ月。\n一番変わったのは「朝の感覚」。\n目覚ましなしで起きて、娘を送り出して、コーヒー淹れる。\nたったそれだけで幸福度が全然違う。\n#サイドFIRE #50代 #早期退職 #暮らし",
+      linkedArticle: null,
+    },
+    {
+      id: 5,
+      date: "2026-04-11",
+      status: "scheduled",
+      text: "サイドFIRE後の節約、意外と楽しい。\n会社員時代：コンビニ弁当＋缶コーヒー\n今：自炊＋水筒持参\n月の食費、2万くらい減った気がする。\nストレス減ると無駄遣いも減る。\n#FIRE #節約 #50代 #サイドFIRE",
+      linkedArticle: null,
+    },
+    {
+      id: 6,
+      date: "2026-04-12",
+      status: "scheduled",
+      text: "退職後、地味に助かってること。\n「パートで社会保険に入れる」こと。\n国保の保険料、想像以上に高い。\n任意継続とどっちが得か、次のnoteで徹底比較します。\n#健康保険 #退職後 #FIRE #50代",
+      linkedArticle: 7,
+    },
+    {
+      id: 7,
+      date: "2026-04-14",
+      status: "scheduled",
+      text: "最近よく聞く「NISA貧乏」。\n老後のために今を削りすぎて、旅行も外食も我慢…。\n50歳になった私が一番怖いのは、実は「資産が増えなかったこと」じゃない。\n週末のnoteで書きます。\n#NISA貧乏 #新NISA #サイドFIRE #50代",
+      linkedArticle: null,
+    },
+    {
+      id: 8,
+      date: "2026-04-15",
+      status: "scheduled",
+      text: "月3万円を20年積み立てたら約1,233万円。\n同じ3万円を40年積み立てたら約4,578万円。\n期間が2倍で、最終額は約3.7倍。\n複利は「金額」より「時間」が効く。\nだから若い時間の使い方は、慎重に。\n#新NISA #複利 #サイドFIRE #FIRE",
+      linkedArticle: null,
+    },
+    {
+      id: 9,
+      date: "2026-04-16",
+      status: "scheduled",
+      text: "【note更新📝】\nNISA貧乏は本当に正解か？\n50歳になって「悔やんで」初めて見えた景色がある。\n\n・金融配当\n・自己投資の配当\n・思い出の配当\n\n3つの配当で公式を書き換える話👇\nhttps://note.com/lucid_zinnia7777/n/nec18fb6b426e\n#NISA貧乏 #新NISA #FIRE #50代 #DIEWITHZERO",
+      linkedArticle: 8,
+    },
+    {
+      id: 10,
+      date: "2026-04-13",
+      status: "scheduled",
+      text: "退職して気づいた一冊。\n\n『お金の大学』の「目的別口座で見える化」の章。\n会社員時代は流してたのに、収入が不安定になった瞬間「これだ」と腹落ち。\n\n50代で気づくのは遅い📚\n\n▼Amazon\nhttps://amzn.to/4t3dgp3\n\n#PR #サイドFIRE #50代",
+      linkedArticle: null,
+    },
+    {
+      id: 11,
+      date: "2026-04-17",
+      status: "scheduled",
+      text: "50歳で一番刺さった本。\n\n『DIE WITH ZERO』\n貯めるだけじゃなく「経験に使う時期」がある。\n\n資産は増えても「思い出の配当」は取り損ねてきた…と気づかされた📚\n\n▼Amazon\nhttps://amzn.to/4mmC4FU\n\n#PR #FIRE #50代",
+      linkedArticle: null,
+    },
+    {
+      id: 12,
+      date: "2026-04-19",
+      status: "scheduled",
+      text: "退職前に一番救われた本。\n\n山崎元『ほったらかし投資術』\n\n結論：オルカン or S&P500を積立てて放置。\n\n50代で迷子の人こそ📚\n¥990で一生モノ。\n\n▼Amazon\nhttps://amzn.to/41mqSj1\n\n#PR #インデックス投資 #FIRE",
+      linkedArticle: null,
+    },
+    {
+      id: 13,
+      date: "2026-04-21",
+      status: "scheduled",
+      text: "50代退職組の必読書。\n\n大江英樹『「定年後」のお金の不安をなくす』\n\n年金・退職金・iDeCo出口・医療費…\n落とし穴を全部事前に教えてくれる📚\n\n退職後マネー実務の決定版。\n\n▼Amazon\nhttps://amzn.to/3Q50Qyc\n\n#PR #50代 #iDeCo",
+      linkedArticle: null,
+    },
+    {
+      id: 14,
+      date: "2026-04-23",
+      status: "scheduled",
+      text: "娘にも読ませたい1冊。\n\n『漫画 バビロン大富豪の教え』\n\n「収入の10分の1を貯金せよ」\n2000年以上前から答えは決まってた📚\n\n漫画なら子どもと一緒に読める。\n\n▼Amazon\nhttps://amzn.to/4vlJ0XZ\n\n#PR #資産形成 #FIRE #50代",
+      linkedArticle: null,
+    },
+  ],
+};
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  以下はレンダリングロジック — 基本的に編集不要              ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+const D = DASHBOARD_DATA;
+
+// ---- ユーティリティ ----
+function fmt(dateStr) {
+  if (!dateStr) return "未定";
+  const d = new Date(dateStr + "T00:00:00");
+  return `${d.getMonth()+1}/${d.getDate()}`;
+}
+function statusBadge(s) {
+  const m = { published: "公開済み", draft: "下書き", planned: "予定", idea: "アイデア", posted: "投稿済み", scheduled: "予約済み" };
+  return `<span class="badge badge-${s}">${m[s]||s}</span>`;
+}
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+// エスケープ済みのHTMLの中からURLを検出してアンカーに変換
+function linkify(html) {
+  return html.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener" style="color:#4a90d9;text-decoration:underline;word-break:break-all;">$1</a>');
+}
+
+// ---- X投稿ステータスの永続化（localStorage） ----
+// ユーザーがワンクリックで「投稿済み」に切り替えた結果をブラウザに保存。
+// 次回リロードしても状態が保持される。Claudeを呼ばずに自分で更新できる仕組み。
+const X_POSTS_OVERRIDES_KEY = 'haruDashboard_xPostsOverrides_v1';
+function loadXPostsOverrides() {
+  try { return JSON.parse(localStorage.getItem(X_POSTS_OVERRIDES_KEY) || '{}'); }
+  catch(e) { return {}; }
+}
+function saveXPostsOverrides(obj) {
+  try { localStorage.setItem(X_POSTS_OVERRIDES_KEY, JSON.stringify(obj)); } catch(e) {}
+}
+function applyXPostsOverrides() {
+  const overrides = loadXPostsOverrides();
+  D.xPosts.forEach(p => {
+    if (overrides[p.id] !== undefined) p.status = overrides[p.id];
+  });
+}
+function toggleXPostStatus(id) {
+  const post = D.xPosts.find(p => p.id === id);
+  if (!post) return;
+  const newStatus = post.status === 'posted' ? 'scheduled' : 'posted';
+  post.status = newStatus;
+  const overrides = loadXPostsOverrides();
+  overrides[id] = newStatus;
+  saveXPostsOverrides(overrides);
+  renderXPosts();
+  renderCalendar();
+}
+
+// ---- note記事パネル ----
+function renderArticles() {
+  const el = document.getElementById('panel-note');
+  const drafts = D.articles.filter(a => a.status === 'draft' || a.status === 'planned');
+  const ideas = D.articles.filter(a => a.status === 'idea');
+  const published = D.articles.filter(a => a.status === 'published');
+
+  let html = `<div class="section-title">📝 下書き・公開予定（${drafts.length}件）</div>`;
+  drafts.sort((a,b) => (a.date||'9').localeCompare(b.date||'9')).forEach(a => {
+    html += articleCard(a);
+  });
+
+  html += `<div class="section-title" style="margin-top:24px">💡 アイデア（${ideas.length}件）</div>`;
+  ideas.forEach(a => {
+    html += articleCard(a);
+  });
+
+  html += `<div class="section-title" style="margin-top:24px">📰 公開済み（${published.length}件）</div>`;
+  published.sort((a,b) => b.date.localeCompare(a.date)).forEach(a => {
+    html += articleCard(a);
+  });
+  el.innerHTML = html;
+}
+
+function articleCard(a) {
+  return `
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">記事${a.id <= 10 ? '⓪①②③④⑤⑥⑦⑧⑨⑩'[a.id] : a.id} ${a.title}</span>
+        ${statusBadge(a.status)}
+      </div>
+      <div style="font-size:14px;color:var(--text-sub);">
+        ${a.date ? '📅 ' + fmt(a.date) + (a.status==='published'?' 公開':' 公開予定') : '📅 未定'}
+      </div>
+      <div style="font-size:14px;color:var(--text-sub);margin-top:6px;">${a.summary}</div>
+      <div class="tags">${a.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      ${a.noteUrl ? `<div style="margin-top:12px;"><a href="${a.noteUrl}" target="_blank" rel="noopener" class="article-link-btn">🔗 noteで記事を開く</a></div>` : ''}
+    </div>`;
+}
+
+// ---- X投稿パネル ----
+function renderXPosts() {
+  const el = document.getElementById('panel-x');
+  const scheduled = D.xPosts.filter(p => p.status === 'scheduled');
+  const posted = D.xPosts.filter(p => p.status === 'posted');
+
+  // 手順ガイド（常に先頭に表示）
+  let html = `
+    <div class="workflow-guide">
+      <div class="workflow-title">📝 投稿の流れ（2ステップ・スマホ対応）</div>
+      <div class="workflow-steps">
+        <div class="wf-step"><span class="wf-num">1</span>「📱 Xに投稿（ワンタップ）」を押す → 投稿文入りのX画面が開く → 投稿ボタンを押すだけ</div>
+        <div class="wf-step"><span class="wf-num">2</span>このページに戻って「✅ 投稿済みにする」を押す</div>
+      </div>
+      <div class="workflow-note">※ Xアプリがインストールされていればアプリが起動します。PCではWeb版が開きます。状態はこのブラウザに保存され、リロードしても保持されます。</div>
+    </div>`;
+
+  html += `<div class="section-title">📋 予約・投稿予定（${scheduled.length}件）</div>`;
+  scheduled.sort((a,b) => a.date.localeCompare(b.date)).forEach(p => {
+    html += xCard(p);
+  });
+
+  html += `<div class="section-title" style="margin-top:24px">📮 投稿済み（${posted.length}件）</div>`;
+  posted.sort((a,b) => b.date.localeCompare(a.date)).forEach(p => {
+    html += xCard(p);
+  });
+
+  // リセットボタン（一番下）
+  html += `
+    <div style="margin-top:32px;padding-top:16px;border-top:1px solid var(--border);text-align:center;">
+      <button class="reset-btn" onclick="resetXPostsOverrides()" title="ブラウザに保存した投稿済み状態を全部クリアします。元のHTMLファイルのステータスに戻ります。">⚙️ 投稿済み状態をリセット</button>
+    </div>`;
+  el.innerHTML = html;
+}
+
+// ---- Xに投稿（Web Intent方式：ワンタップ投稿対応） ----
+// スマホでも動作。URLに投稿文を埋め込んでX(アプリorWeb)の投稿画面を直接開く。
+// 画像PCでもスマホでも同じ動き。クリップボードAPI不要なのでfile://でも動く。
+function postToX(text) {
+  // Web IntentのURL形式。Xアプリが入っていれば自動でアプリが起動する。
+  const url = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text);
+  // バックアップでクリップボードにもコピー（失敗しても無視）
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).catch(() => {});
+  }
+  window.open(url, '_blank');
+}
+
+// ---- 状態リセット ----
+function resetXPostsOverrides() {
+  if (!confirm('ブラウザに保存した「投稿済み」状態を全部クリアします。よろしいですか？\n\n（HTMLファイル本来のステータスに戻ります。Claudeが更新した最新の状態を反映したいときに使ってください）')) return;
+  localStorage.removeItem(X_POSTS_OVERRIDES_KEY);
+  location.reload();
+}
+
+function xCard(p) {
+  const linked = p.linkedArticle ? D.articles.find(a => a.id === p.linkedArticle) : null;
+  return `
+    <div class="card">
+      <div class="card-header">
+        <span style="font-size:14px;color:var(--text-sub);">📅 ${fmt(p.date)}</span>
+        ${statusBadge(p.status)}
+      </div>
+      <div style="font-size:15px;white-space:pre-wrap;margin:10px 0;line-height:1.8;">${linkify(escHtml(p.text))}</div>
+      ${linked ? `<div style="font-size:13px;color:var(--blue);margin-bottom:8px;">🔗 記事${linked.id}「${linked.title}」に連動</div>` : ''}
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        ${p.status === 'posted'
+          ? `<button class="toggle-btn posted" onclick="toggleXPostStatus(${p.id})" title="クリックで予約済みに戻します">✅ 投稿済み</button>`
+          : `<button class="copy-go-btn" onclick="postToX(decodeURIComponent('${encodeURIComponent(p.text)}'))" title="投稿文が入った状態でX(アプリ/Web)を開きます。スマホでもワンタップ投稿できます。">📱 Xに投稿（ワンタップ）</button>
+             <button class="toggle-btn" onclick="toggleXPostStatus(${p.id})" title="X投稿が完了したらクリック">✅ 投稿済みにする</button>`
+        }
+        ${linked && linked.noteUrl ? `<a href="${linked.noteUrl}" target="_blank" rel="noopener" class="article-link-btn" style="margin-top:8px;">🔗 noteで記事を開く</a>` : ''}
+        <button class="copy-btn-small" onclick="navigator.clipboard.writeText(decodeURIComponent('${encodeURIComponent(p.text)}')).then(()=>{this.textContent='✅';setTimeout(()=>this.textContent='📋 コピーのみ',2000);}).catch(e=>alert('コピー失敗: '+e))" title="Xを開かずテキストだけコピー">📋 コピーのみ</button>
+      </div>
+    </div>`;
+}
+
+// ---- カレンダーパネル ----
+let calYear, calMonth;
+function initCal() {
+  const today = new Date();
+  calYear = today.getFullYear();
+  calMonth = today.getMonth();
+  renderCalendar();
+}
+function changeMonth(delta) {
+  calMonth += delta;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+}
+function renderCalendar() {
+  const el = document.getElementById('panel-cal');
+  const today = new Date();
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const mm = String(calMonth+1).padStart(2,'0');
+  const ym = `${calYear}-${mm}`;
+
+  // イベント取得
+  const events = {};
+  D.articles.forEach(a => {
+    if (a.date && a.date.startsWith(ym)) {
+      const day = parseInt(a.date.split('-')[2]);
+      if (!events[day]) events[day] = [];
+      events[day].push({ type: 'note', label: `📝${a.id}`, title: a.title });
+    }
+  });
+  D.xPosts.forEach(p => {
+    if (p.date && p.date.startsWith(ym)) {
+      const day = parseInt(p.date.split('-')[2]);
+      if (!events[day]) events[day] = [];
+      events[day].push({ type: 'x', label: '𝕏', title: p.text.split('\n')[0].substring(0,20), posted: p.status === 'posted' });
+    }
+  });
+
+  let html = `
+    <div class="cal-nav">
+      <button onclick="changeMonth(-1)">◀ 前月</button>
+      <span class="cal-month-label">${calYear}年 ${calMonth+1}月</span>
+      <button onclick="changeMonth(1)">翌月 ▶</button>
+    </div>
+    <div class="cal-grid">
+      <div class="cal-header">日</div><div class="cal-header">月</div><div class="cal-header">火</div>
+      <div class="cal-header">水</div><div class="cal-header">木</div><div class="cal-header">金</div><div class="cal-header">土</div>`;
+
+  // 空セル
+  for (let i = 0; i < firstDay; i++) html += `<div class="cal-empty"></div>`;
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isToday = d === today.getDate() && calMonth === today.getMonth() && calYear === today.getFullYear();
+    html += `<div class="cal-day${isToday ? ' today' : ''}">`;
+    html += `<div class="day-num">${d}</div>`;
+    if (events[d]) {
+      events[d].forEach(ev => {
+        const evClass = ev.type === 'note' ? 'note-ev' : ('x-ev' + (ev.posted ? ' posted' : ''));
+        html += `<div class="event ${evClass}" title="${ev.title}${ev.posted ? ' (投稿済み)' : ''}">${ev.label}</div>`;
+      });
+    }
+    html += `</div>`;
+  }
+  html += `</div>`;
+  el.innerHTML = html;
+}
+
+// ---- プロフィールパネル ----
+function renderProfile() {
+  const el = document.getElementById('panel-profile');
+  const p = D.profile;
+  el.innerHTML = `
+    <div class="profile-grid">
+      <div class="card">
+        <div class="section-title">👤 基本情報</div>
+        <div style="font-size:13px;line-height:2;">
+          <strong>${p.name}</strong>（${p.age}歳・${p.location}）<br>
+          X: ${p.handle}<br>
+          note: ${p.noteId}<br>
+          ${p.status}
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-title">💰 資産・収支</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:13px;">
+          <div><div class="stat-label">総資産</div><div class="stat-value">${p.totalAssets}</div></div>
+          <div><div class="stat-label">配当金</div><div class="stat-value">${p.monthlyDividend}</div></div>
+          <div><div class="stat-label">生活費</div><div class="stat-value">${p.monthlyExpense}</div></div>
+          <div><div class="stat-label">パート収入</div><div class="stat-value">${p.partIncome}</div></div>
+          <div><div class="stat-label">妻パート</div><div class="stat-value">${p.wifeIncome}</div></div>
+          <div><div class="stat-label">月次ギャップ</div><div class="stat-value" style="color:var(--accent);">${p.gap}</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px;">
+      <div class="section-title">📊 コンテンツ概況</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;text-align:center;">
+        <div><div class="stat-value">${D.articles.filter(a=>a.status==='published').length}</div><div class="stat-label">公開記事</div></div>
+        <div><div class="stat-value">${D.articles.filter(a=>a.status==='draft').length}</div><div class="stat-label">下書き</div></div>
+        <div><div class="stat-value">${D.articles.filter(a=>a.status==='idea').length}</div><div class="stat-label">アイデア</div></div>
+        <div><div class="stat-value">${D.xPosts.filter(p=>p.status==='posted').length}</div><div class="stat-label">X投稿済み</div></div>
+        <div><div class="stat-value">${D.xPosts.filter(p=>p.status==='scheduled').length}</div><div class="stat-label">X予約</div></div>
+      </div>
+    </div>`;
+}
+
+// ---- タブ切替 ----
+function switchTab(tabName) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tabName));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + tabName));
+}
+
+// ---- 初期化 ----
+document.addEventListener('DOMContentLoaded', () => {
+  applyXPostsOverrides();
+  renderArticles();
+  renderXPosts();
+  initCal();
+  renderProfile();
+  // ヘッダー
+  document.getElementById('header-info').innerHTML = `
+    <h1>CONTENT DASHBOARD</h1>
+    <div class="sub">${D.profile.handle}</div>
+    <div class="update-info">最終更新: ${D.lastUpdated}</div>`;
+});
+</script>
+
+<!-- ======= HTML構造 ======= -->
+<div class="header" id="header-info"></div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="cal" onclick="switchTab('cal')">📅 カレンダー</div>
+  <div class="tab" data-tab="note" onclick="switchTab('note')">📰 note</div>
+  <div class="tab" data-tab="x" onclick="switchTab('x')">𝕏 X投稿</div>
+  <div class="tab" data-tab="profile" onclick="switchTab('profile')">👤 プロフィール</div>
+</div>
+
+<div id="panel-cal" class="panel active"></div>
+<div id="panel-note" class="panel"></div>
+<div id="panel-x" class="panel"></div>
+<div id="panel-profile" class="panel"></div>
+
+</body>
+</html>
