@@ -446,6 +446,16 @@ const DASHBOARD_DATA = {
       summary: "楽天経済圏メインだった50歳が退職後にSBIを開設した理由。6つの目的別口座で「見える化」した話。SBIアフィリエイトリンク待ち。",
       noteUrl: "https://note.com/lucid_zinnia7777/n/na4623c37353a",
     },
+    {
+      id: 12,
+      title: "【Kindle出版】知らないと損する退職・iDeCo出口戦略完全ガイド",
+      date: "2026-04-13",
+      status: "published",
+      tags: ["#Kindle出版", "#iDeCo", "#出口戦略", "#退職金", "#50歳FIRE", "#サイドFIRE"],
+      summary: "Kindle本 ¥350で出版申請完了。退職金控除・iDeCo受取順・10年ルール等を50代向けに7つのポイントで解説。72時間以内に販売開始予定。",
+      noteUrl: "",
+      kindleUrl: "",  // 承認後にAmazon URLを追記
+    },
   ],
 
   // --- X投稿一覧 ---
@@ -555,6 +565,28 @@ const DASHBOARD_DATA = {
       text: "娘にも読ませたい1冊。\n\n『漫画 バビロン大富豪の教え』\n\n「収入の10分の1を貯金せよ」\n2000年以上前から答えは決まってた📚\n\n漫画なら子どもと一緒に読める。\n\n▼Amazon\nhttps://amzn.to/4vlJ0XZ\n\n#PR #資産形成 #FIRE #50代",
       linkedArticle: null,
     },
+    // --- Kindle出版 告知ポスト ---
+    {
+      id: 16,
+      date: "2026-04-15",
+      status: "scheduled",
+      text: "【Kindle出版しました📕】\n\n『知らないと損する\n退職・iDeCo出口戦略完全ガイド』\n\n¥350\n\n退職金控除の10年ルール、\niDeCoの受取順を間違えると数十万円損する話。\n\n50代会社員が今すぐ確認すべき7つのポイントをまとめました。\n\n▼Amazon（承認後にURL追記）\n\n#Kindle出版 #iDeCo #退職金 #50代 #サイドFIRE",
+      linkedArticle: 12,
+    },
+    {
+      id: 17,
+      date: "2026-04-17",
+      status: "scheduled",
+      text: "Kindle出版の裏側。\n\n50歳・退職2ヶ月・副業経験ゼロ。\nそんな私がKindle本を1冊出せた。\n\n原稿はClaudeと一緒に書いて、\n表紙もCanvaで自作。\nKDPの申請まで1日で完了。\n\n「自分には無理」と思ってる人ほど、\n一歩が意外と近いかもしれない。\n\n#Kindle出版 #サイドFIRE #50代 #副業",
+      linkedArticle: 12,
+    },
+    {
+      id: 18,
+      date: "2026-04-19",
+      status: "scheduled",
+      text: "退職前に知りたかった。\n\n・退職金とiDeCo、受け取る「順番」で税金が変わる\n・退職所得控除の「10年ルール」\n・一時金vs年金、どっちが得？\n\n全部まとめてKindleに書きました📕\n¥350です。\n\n▼Amazon（承認後にURL追記）\n\n#iDeCo #退職金 #出口戦略 #50代 #FIRE",
+      linkedArticle: 12,
+    },
   ],
 };
 
@@ -648,6 +680,7 @@ function articleCard(a) {
       <div style="font-size:14px;color:var(--text-sub);margin-top:6px;">${a.summary}</div>
       <div class="tags">${a.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
       ${a.noteUrl ? `<div style="margin-top:12px;"><a href="${a.noteUrl}" target="_blank" rel="noopener" class="article-link-btn">🔗 noteで記事を開く</a></div>` : ''}
+      ${a.kindleUrl ? `<div style="margin-top:8px;"><a href="${a.kindleUrl}" target="_blank" rel="noopener" class="article-link-btn" style="background:#ff9900;border-color:#ff9900;">📕 Amazonで見る</a></div>` : (a.kindleUrl === '' && a.id === 12 ? '<div style="margin-top:8px;font-size:13px;color:var(--yellow);">⏳ Amazon承認待ち（72時間以内）— 承認後にURLを追記してください</div>' : '')}
     </div>`;
 }
 
@@ -756,7 +789,7 @@ function renderCalendar() {
     if (a.date && a.date.startsWith(ym)) {
       const day = parseInt(a.date.split('-')[2]);
       if (!events[day]) events[day] = [];
-      events[day].push({ type: 'note', label: `📝${a.id}`, title: a.title });
+      events[day].push({ type: 'note', label: `📝${a.title.substring(0,8)}`, title: a.title });
     }
   });
   D.xPosts.forEach(p => {
