@@ -333,13 +333,13 @@ const DASHBOARD_DATA = {
     noteId: "lucid_zinnia7777",
     age: 50,
     location: "名古屋",
-    status: "サイドFIRE 2ヶ月目（2026年2月末退職）",
-    totalAssets: "約6,700万円",
-    monthlyDividend: "月約7万円（年70万弱）",
-    monthlyExpense: "月30万円超",
-    partIncome: "月約12万円",
+    status: "サイドFIRE 2ヶ月目（2026年2月末退職／4月末でパート勤務終了）",
+    totalAssets: "約7,046万円（2026/4末・先月比+346万）",
+    monthlyDividend: "月平均約6万円（年70万前後、4月は0円・3.6.9.12月集中）",
+    monthlyExpense: "月約53万円（4月：固定資産税16万・大学費用150万含む特殊月）",
+    partIncome: "月約20万円（4月末で勤務終了、5月給与で最後／6月以降ゼロ）",
     wifeIncome: "月約7万円",
-    gap: "約▲5万円（現金貯金から補填）",
+    gap: "4月：▲約20万円（5月以降は失業手当受給フェーズ）",
   },
 
   // --- note記事一覧 ---
@@ -439,15 +439,7 @@ const DASHBOARD_DATA = {
       noteUrl: "https://note.com/lucid_zinnia7777/n/nde1c41bd6378",
       amazonEmbed: "NISA入門2冊（知りたいことシリーズ／世界一やさしい新NISA）",
     },
-    {
-      id: 13,
-      title: "パート勤務で社会保険に入るメリット・デメリット【50歳サイドFIRE】",
-      date: "",
-      status: "idea",
-      tags: ["#社会保険", "#パート", "#50代", "#退職後"],
-      summary: "妻46歳パート。社会保険加入vs扶養の比較。退職後に自分自身もパートで社会保険に入った体験も合わせて。",
-      noteUrl: "",
-    },
+    // ※idea配列は ideas に分離（2026-04-27〜）。articles は published/draft のみ。
     {
       id: 11,
       title: "両学長も勧めてるのに、なぜ今になってSBIを開設したのか【楽天メイン50歳の正直な話】",
@@ -457,16 +449,7 @@ const DASHBOARD_DATA = {
       summary: "楽天経済圏メインだった50歳が退職後にSBIを開設した理由。6つの目的別口座で「見える化」した話。SBIアフィリエイトリンク待ち。",
       noteUrl: "https://note.com/lucid_zinnia7777/n/na4623c37353a",
     },
-    {
-      id: 12,
-      title: "【Kindle出版】知らないと損する退職・iDeCo出口戦略完全ガイド",
-      date: "2026-04-15",
-      status: "published",
-      tags: ["#Kindle出版", "#iDeCo", "#出口戦略", "#退職金", "#50歳FIRE", "#サイドFIRE"],
-      summary: "Kindle本 ¥350で販売開始！退職金控除・iDeCo受取順・10年ルール等を50代向けに7つのポイントで解説。アフィリエイト8%。ASIN: B0GXB22DQ3",
-      noteUrl: "",
-      kindleUrl: "https://amzn.to/4tHe5nc",
-    },
+    // ※Kindle本はarticles配列から外して別タブ（kindleBooks）で管理（2026-04-27〜）
     {
       id: 14,
       title: "パート、辞めます。──サイドFIRE2ヶ月で早くも方向転換した話",
@@ -485,6 +468,67 @@ const DASHBOARD_DATA = {
       summary: "退職後2ヶ月目（4月末）の資産公開。総資産約7,046万円（先月比+約346万・退職比+約1,316万、退職金970万含む）。資産内訳の比較表（投資信託・米国株・国内株・マネファンド債券・現金）、4月の収支（パート最終月20万、児童手当6万）、固定資産税16万・双子大学関連費150万（多子世帯免除＋祖母教育援助で相殺）、月次ギャップ▲約20万。3つの配当（金融・自己投資・思い出）で振り返る4月。シリーズ初の有料記事(¥300)、毎月使い回しのテンプレ運用開始。アイキャッチは月次差し替えスクリプトで生成。",
       noteUrl: "https://note.com/lucid_zinnia7777/n/n1a2c50e4cbaf",
       amazonEmbed: "『ほったらかし投資術』(山崎元・全面改訂第3版)",
+    },
+  ],
+
+  // --- noteアイデア（連番ID持たず、企画段階の記事案） ---
+  ideas: [
+    {
+      title: "パート勤務で社会保険に入るメリット・デメリット【50歳サイドFIRE】",
+      tags: ["#社会保険", "#パート", "#50代", "#退職後"],
+      summary: "妻46歳パート。社会保険加入vs扶養の比較。退職後に自分自身もパートで社会保険に入った体験も合わせて。",
+    },
+    {
+      title: "「3人扶養世帯」だから受けられた、大学授業料免除150万の話",
+      tags: ["#3人扶養", "#多子世帯", "#大学授業料免除", "#50代", "#教育費"],
+      summary: "双子の大学3年生＋小学2年生の3人扶養世帯。2025年度から始まった多子世帯への大学授業料免除制度（所得制限なし）で、双子分の授業料が全額免除。それ以外の教科書・実習費は祖母（私の母）からの教育費援助で相殺。50代×3人扶養ならではの活用術と、知らないと損する制度の解説。",
+    },
+    {
+      title: "50代で初めてのハローワーク。失業手当の現実と手続き全部まとめ",
+      tags: ["#ハローワーク", "#失業手当", "#50代", "#早期退職", "#サイドFIRE", "#自己都合退職"],
+      summary: "5月から失業手当の受給フェーズへ。50代×自己都合退職×サイドFIRE目的という珍しいケース。給付制限・受給期間・職業訓練・求職活動実績・初回ハローワーク訪問のリアル。同世代がこれから経験する流れを実体験ベースで書く予定。",
+    },
+  ],
+
+  // --- Kindle本一覧（noteとは別管理） ---
+  kindleBooks: [
+    {
+      id: 1,
+      title: "知らないと損する 退職・iDeCo出口戦略完全ガイド",
+      status: "published",
+      publishDate: "2026-04-15",
+      asin: "B0GXB22DQ3",
+      price: "¥350",
+      affiliateUrl: "https://amzn.to/4tHe5nc",
+      pages: "約60ページ（個人出版）",
+      summary: "退職金控除・iDeCo受取順・10年ルール等を50代向けに7つのポイントで解説。退職前に知りたかった出口戦略を1冊にまとめた。",
+      tags: ["#iDeCo", "#出口戦略", "#退職金", "#50代", "#サイドFIRE"],
+    },
+    {
+      id: 2,
+      title: "知らないと損する NISAの系譜と使い分け完全ガイド",
+      status: "draft",
+      publishDate: "2026-05-10〜15予定",
+      asin: "",
+      price: "未定（¥350想定）",
+      affiliateUrl: "",
+      pages: "全8章完成・表紙完成",
+      summary: "旧NISA→新NISA→こどもNISAの制度変遷と最適な使い分け。原稿完成・表紙完成、KDPアップロード待ち。",
+      tags: ["#新NISA", "#旧NISA", "#こどもNISA", "#家族NISA"],
+    },
+  ],
+
+  // --- Kindleアイデア（次に書きたい本の企画案） ---
+  kindleIdeas: [
+    {
+      title: "50代の社会保険・扶養完全ガイド",
+      tags: ["#社会保険", "#扶養", "#50代", "#退職後"],
+      summary: "退職後の社会保険選択（任意継続・国保・扶養）と妻のパート扶養条件のリアル。家族のミスマッチ事例も含めて1冊に。",
+    },
+    {
+      title: "50代ハローワーク完全マニュアル：失業手当を満額もらう",
+      tags: ["#ハローワーク", "#失業手当", "#50代", "#早期退職"],
+      summary: "自己都合退職×サイドFIRE目的という珍しいケースの実体験。給付制限・受給期間・職業訓練・求職活動実績の実態を1冊にまとめる。",
     },
   ],
 
@@ -768,7 +812,7 @@ function toggleXPostStatus(id) {
 function renderArticles() {
   const el = document.getElementById('panel-note');
   const drafts = D.articles.filter(a => a.status === 'draft' || a.status === 'planned');
-  const ideas = D.articles.filter(a => a.status === 'idea');
+  const ideas = D.ideas || [];
   const published = D.articles.filter(a => a.status === 'published');
 
   let html = `<div class="section-title">📝 下書き・公開予定（${drafts.length}件）</div>`;
@@ -778,7 +822,7 @@ function renderArticles() {
 
   html += `<div class="section-title" style="margin-top:24px">💡 アイデア（${ideas.length}件）</div>`;
   ideas.forEach(a => {
-    html += articleCard(a);
+    html += ideaCard(a);
   });
 
   html += `<div class="section-title" style="margin-top:24px">📰 公開済み（${published.length}件）</div>`;
@@ -786,6 +830,18 @@ function renderArticles() {
     html += articleCard(a);
   });
   el.innerHTML = html;
+}
+
+function ideaCard(a) {
+  return `
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">💡 ${escHtml(a.title)}</span>
+        ${statusBadge('idea')}
+      </div>
+      <div style="font-size:14px;color:var(--text-sub);margin-top:6px;">${escHtml(a.summary)}</div>
+      <div class="tags">${(a.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    </div>`;
 }
 
 function articleCard(a) {
@@ -981,12 +1037,62 @@ function renderProfile() {
       <div class="section-title">📊 コンテンツ概況</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;text-align:center;">
         <div><div class="stat-value">${D.articles.filter(a=>a.status==='published').length}</div><div class="stat-label">公開記事</div></div>
-        <div><div class="stat-value">${D.articles.filter(a=>a.status==='draft').length}</div><div class="stat-label">下書き</div></div>
-        <div><div class="stat-value">${D.articles.filter(a=>a.status==='idea').length}</div><div class="stat-label">アイデア</div></div>
+        <div><div class="stat-value">${D.articles.filter(a=>a.status==='draft' || a.status==='planned').length}</div><div class="stat-label">下書き</div></div>
+        <div><div class="stat-value">${(D.ideas||[]).length + (D.kindleIdeas||[]).length}</div><div class="stat-label">アイデア</div></div>
         <div><div class="stat-value">${D.xPosts.filter(p=>p.status==='posted').length}</div><div class="stat-label">X投稿済み</div></div>
         <div><div class="stat-value">${D.xPosts.filter(p=>p.status==='scheduled').length}</div><div class="stat-label">X予約</div></div>
+        <div><div class="stat-value">${(D.kindleBooks||[]).filter(b=>b.status==='published').length}</div><div class="stat-label">Kindle出版済み</div></div>
+        <div><div class="stat-value">${(D.kindleBooks||[]).filter(b=>b.status==='draft').length}</div><div class="stat-label">Kindle執筆中</div></div>
       </div>
     </div>`;
+}
+
+// ---- Kindle本パネル ----
+function renderKindle() {
+  const el = document.getElementById('panel-kindle');
+  if (!el) return;
+  const books = D.kindleBooks || [];
+  const ideas = D.kindleIdeas || [];
+  if (books.length === 0 && ideas.length === 0) {
+    el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);">Kindle本はまだ登録されていません</div>';
+    return;
+  }
+  let html = `<div class="section-title">📚 Kindle本（${books.length}冊）</div>`;
+  html += books.map(b => {
+    const tagsHtml = (b.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
+    return `
+      <div class="article-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px;">
+              ${statusBadge(b.status)}
+              <span style="font-size:13px;color:var(--muted);">${b.publishDate}</span>
+              ${b.asin ? `<span style="font-size:12px;color:var(--muted);font-family:monospace;">ASIN:${b.asin}</span>` : ''}
+              <span style="font-size:13px;color:var(--accent);font-weight:bold;">${b.price}</span>
+            </div>
+            <div style="font-weight:bold;font-size:15px;margin-bottom:6px;">📕 ${escHtml(b.title)}</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.7;margin-bottom:8px;">${escHtml(b.summary)}</div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">📄 ${escHtml(b.pages)}</div>
+            <div style="margin-bottom:8px;">${tagsHtml}</div>
+            ${b.affiliateUrl ? `<a href="${b.affiliateUrl}" target="_blank" rel="noopener" class="article-link-btn" style="background:#ff9900;border-color:#ff9900;color:#fff;">📕 Amazonで見る</a>` : '<span style="font-size:13px;color:var(--yellow);">⏳ 出版準備中</span>'}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  if (ideas.length > 0) {
+    html += `<div class="section-title" style="margin-top:24px">💡 Kindleアイデア（${ideas.length}件）</div>`;
+    html += ideas.map(b => `
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">💡 ${escHtml(b.title)}</span>
+          ${statusBadge('idea')}
+        </div>
+        <div style="font-size:14px;color:var(--text-sub);margin-top:6px;">${escHtml(b.summary)}</div>
+        <div class="tags">${(b.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      </div>`).join('');
+  }
+  el.innerHTML = html;
 }
 
 // ---- タブ切替 ----
@@ -1000,6 +1106,7 @@ document.addEventListener('DOMContentLoaded', () => {
   applyXPostsOverrides();
   renderArticles();
   renderXPosts();
+  renderKindle();
   initCal();
   renderProfile();
   // ヘッダー
@@ -1017,12 +1124,14 @@ document.addEventListener('DOMContentLoaded', () => {
   <div class="tab active" data-tab="cal" onclick="switchTab('cal')">📅 カレンダー</div>
   <div class="tab" data-tab="note" onclick="switchTab('note')">📰 note</div>
   <div class="tab" data-tab="x" onclick="switchTab('x')">𝕏 X投稿</div>
+  <div class="tab" data-tab="kindle" onclick="switchTab('kindle')">📚 Kindle本</div>
   <div class="tab" data-tab="profile" onclick="switchTab('profile')">👤 プロフィール</div>
 </div>
 
 <div id="panel-cal" class="panel active"></div>
 <div id="panel-note" class="panel"></div>
 <div id="panel-x" class="panel"></div>
+<div id="panel-kindle" class="panel"></div>
 <div id="panel-profile" class="panel"></div>
 
 </body>
